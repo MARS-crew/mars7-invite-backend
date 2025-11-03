@@ -2,6 +2,7 @@ package project.mars7invite.user.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.mars7invite.user.enums.Position;
@@ -21,9 +22,9 @@ public class RequestUserDto {
     @Size(max = 100, message = "학과는 100자 이하여야 합니다.")
     private String department;
 
-    @Schema(description = "포지션", example = "FRONTEND")
-    @NotNull(message = "포지션은 필수입니다.")
-    private Position position;
+    @Schema(description = "포지션 목록", example = "[\"FRONTEND\", \"BACKEND\"]")
+    @NotEmpty(message = "포지션 목록은 비어있을 수 없습니다.")
+    private List<Position> positions;
 
     @Schema(description = "나이", example = "22", minimum = "1", maximum = "30")
     @NotNull(message = "나이는 필수입니다.")

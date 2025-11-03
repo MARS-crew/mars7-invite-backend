@@ -1,9 +1,12 @@
 package project.mars7invite.user.service;
 
 import lombok.RequiredArgsConstructor;
+import project.mars7invite.common.exception.BaseException;
+import project.mars7invite.common.exception.BaseExceptionType;
 import project.mars7invite.user.dto.RequestUserDto;
 import project.mars7invite.user.dto.ResponseUserDto;
 import project.mars7invite.user.entity.User;
+import project.mars7invite.user.enums.Position;
 import project.mars7invite.user.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
@@ -21,10 +24,15 @@ public class UserService {
 
     @Transactional
     public ResponseUserDto save(RequestUserDto dto) {
+        List<Position> positions = dto.getPositions();
+        if (positions == null || positions.isEmpty()) {
+            throw new BaseException(BaseExceptionType.ARGUMENT_NOT_VALID);
+        }
+
         User user = User.builder()
                 .name(dto.getName())
                 .department(dto.getDepartment())
-                .position(dto.getPosition())
+                .positions(positions)
                 .age(dto.getAge())
                 .motivation(dto.getMotivation())
                 .phoneNumber(dto.getPhoneNumber())

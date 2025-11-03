@@ -1,6 +1,8 @@
 package project.mars7invite.user.entity;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,9 +25,11 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, length = 100)
     private String department;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "TB_USER_POSITIONS", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private Position position;
+    @Column(name = "position", nullable = false, length = 20)
+    private List<Position> positions = new ArrayList<>();
 
     @Column(nullable = false)
     private Integer age;
@@ -40,11 +44,13 @@ public class User extends BaseTimeEntity {
     private Boolean privacyAgreement;
 
     @Builder
-    public User(String name, String department, Position position, Integer age, 
+    public User(String name, String department, List<Position> positions, Integer age, 
                       String motivation, String phoneNumber, Boolean privacyAgreement) {
         this.name = name;
         this.department = department;
-        this.position = position;
+        if (positions != null) {
+            this.positions = positions;
+        }
         this.age = age;
         this.motivation = motivation;
         this.phoneNumber = phoneNumber;

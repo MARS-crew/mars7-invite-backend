@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import project.mars7invite.user.entity.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -17,7 +19,7 @@ public class ResponseUserDto {
     private Long id;
     private String name;
     private String department;
-    private String positionLabel;
+    private List<String> positions;
     private Integer age;
     private String motivation;
     private String phoneNumber;
@@ -26,11 +28,18 @@ public class ResponseUserDto {
     private LocalDateTime modifiedAt;
 
     public static ResponseUserDto from(User user) {
+        List<String> labels = null;
+        if (user.getPositions() != null && !user.getPositions().isEmpty()) {
+            labels = user.getPositions().stream()
+                    .map(p -> p.getLabel())
+                    .collect(Collectors.toList());
+        }
+
         return ResponseUserDto.builder()
                 .id(user.getUserId())
                 .name(user.getName())
                 .department(user.getDepartment())
-                .positionLabel( user.getPosition().getLabel())
+                .positions(labels)
                 .age(user.getAge())
                 .motivation(user.getMotivation())
                 .phoneNumber(user.getPhoneNumber())
